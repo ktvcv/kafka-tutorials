@@ -4,14 +4,10 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.common.protocol.types.Field;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
-import java.util.Collections;
 import java.util.Properties;
 
 import static java.util.Collections.singletonList;
@@ -20,9 +16,9 @@ import static sample.kafka.producer.KafkaProducerFactory.OFFSET_CONFIG;
 import static sample.kafka.producer.KafkaProducerFactory.SERVERS;
 import static sample.kafka.producer.KafkaProducerFactory.TOPIC;
 
-public class ProducerDemo {
+public class ConsumerDemo {
 
-    private static final Logger logger = LoggerFactory.getLogger(ProducerDemo.class.getSimpleName());
+    private static final Logger logger = LoggerFactory.getLogger(ConsumerDemo.class.getSimpleName());
 
     public static void main(String[] args) {
 
