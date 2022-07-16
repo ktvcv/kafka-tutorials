@@ -18,8 +18,6 @@ public class WikimediaChangesProducer {
         final EventHandler handler = new WikimediaChangeHandler(kafkaProducer, topicName);
         final String url = "https://stream.wikimedia.org/v2/stream/recentchange";
 
-
-
         final EventSource.Builder eventSourceBuilder = new EventSource.Builder(handler, URI.create(url));
         final EventSource eventSource = eventSourceBuilder.build();
 
@@ -27,7 +25,6 @@ public class WikimediaChangesProducer {
         eventSource.start();
 
         TimeUnit.MINUTES.sleep(10);
-
 
     }
 }
