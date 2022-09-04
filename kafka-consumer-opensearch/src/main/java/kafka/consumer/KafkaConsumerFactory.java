@@ -20,6 +20,7 @@ public class KafkaConsumerFactory {
         properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, GROUP_ID);
         properties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");
+        // consumer does not commit offsets automatically
         properties.setProperty(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false");
 
         // create consumer

@@ -5,6 +5,8 @@ import lombok.SneakyThrows;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.opensearch.action.bulk.BulkRequest;
+import org.opensearch.action.bulk.BulkResponse;
 import org.opensearch.action.index.IndexRequest;
 import org.opensearch.action.index.IndexResponse;
 import org.opensearch.client.RequestOptions;
@@ -52,21 +54,33 @@ public final class OpenSearchConsumer {
             final int recordCount = records.count();
 
             logger.info(format("Received %d records", recordCount));
+            final BulkRequest bulkRequest = new BulkRequest();
 
             for (final ConsumerRecord<String, String> consumerRecord : records) {
                 final String id = extractId(consumerRecord.value());
                 // send to OpenSearch
                 try {
+                    // not efficient
                     final IndexRequest request = new IndexRequest(INDEX_NAME)
                         .source(consumerRecord.value(), XContentType.JSON)
                         .id(id);
 
-                    final IndexResponse response = restClient.index(request, RequestOptions.DEFAULT);
+                    bulkRequest.add(request);
+                    /*final IndexResponse response = restClient.index(request, RequestOptions.DEFAULT);
 
-                    logger.info("Records were inserted in OpenSearch " + response.getId());
+                    logger.info("Records were inserted in OpenSearch " + response.getId());*/
                 } catch (final Exception e) {
                     e.printStackTrace();
                 }
+
+                if (bulkRequest.numberOfActions() > 0) {
+                    final BulkResponse bulkResponse = restClient.bulk(bulkRequest, RequestOptions.DEFAULT);
+                    logger.info("Inserted " + bulkResponse.getItems().length + " record(S)");
+
+                    // to commit offset
+                    kafkaConsumer.commitSync();
+                }
+
             }
         }
 
